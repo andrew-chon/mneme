@@ -1,9 +1,9 @@
 build:
 	@echo "Building..."
-	@cd server && go build -o mneme cmd/app/main.go
+	@go build -o mneme server/cmd/api/main.go
 
 run:
-	@cd server && go run cmd/app/main.go
+	@go run server/cmd/api/main.go
 
 clean:
 	@echo "Cleaning..."

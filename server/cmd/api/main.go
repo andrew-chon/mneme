@@ -7,10 +7,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"sync"
 	"time"
 
-	"github.com/andrew-chon/mneme/internal/server"
+	"github.com/andrew-chon/mneme/server/internal/server"
 )
 
 func main() {
@@ -22,31 +21,39 @@ func main() {
 }
 
 func run(ctx context.Context) error {
-	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
-	defer cancel()
-
 	server := server.NewServer()
+
+	// Create a done channel to signal when the shutdown is complete
+	done := make(chan struct{}, 1)
+
+	go gracefulShutdown(ctx, server, done)
+
 	go func() {
 		log.Printf("listening on %s\n", server.Addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
+			panic(fmt.Sprintf("Error listening and servering: %s", err))
 		}
 	}()
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		<-ctx.Done()
 
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		if err := server.Shutdown(shutdownCtx); err != nil {
-			fmt.Fprintf(os.Stderr, "error shutting down http server: %s\n", err)
-		}
+	// Wait for the graceful shutdown to complete
+	<-done
+	fmt.Fprint(os.Stderr, "\nGraceful shutdown complete\n")
 
-		fmt.Fprint(os.Stderr, "Server exiting...")
-	}()
-
-	wg.Wait()
 	return nil
+}
+
+func gracefulShutdown(ctx context.Context, server *http.Server, done chan<- struct{}) {
+	// Create context that listens for the interrupt signal from the OS.
+	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
+	defer cancel()
+
+	<-ctx.Done()
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		fmt.Fprintf(os.Stderr, "error shutting down http server: %s\n", err)
+	}
+
+	done <- struct{}{}
 }
