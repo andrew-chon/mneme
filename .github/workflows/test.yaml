@@ -23,10 +23,9 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
-  
+
   test:
     name: test
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +37,6 @@ jobs:
 
   build:
     name: build
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,4 +45,3 @@ jobs:
           go-version: stable
       - name: Build binary
         run: make build
-
