@@ -8,3 +8,6 @@ run:
 clean:
 	@echo "Cleaning..."
 	@rm -f mneme
+
+lint: 
+	@golangci-lint run
