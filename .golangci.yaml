@@ -1,0 +1,59 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused # maybe only check on ci?  it is slow
+    - bodyclose
+    - copyloopvar
+    - dupl
+    - errname
+    - errorlint
+    - exhaustive
+    - forbidigo
+    - gci
+    - gocheckcompilerdirectives 
+    - gochecknoinits
+    - gocognit # slow, potentially only enable in prod?
+    - goconst
+    - gocritic
+    - godot
+    - gofumpt
+    - gosec
+    - iface
+    - intrange
+    - lll
+    - loggercheck
+    - mirror
+    - misspell
+    - musttag
+    - nakedret
+    - nilerr
+    - nlreturn
+    - noctx
+    - perfsprint
+    - prealloc
+    - promlinter
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - sloglint
+    - sqlclosecheck
+    - stylecheck
+    - tagalign
+    - tenv
+    - testifylint
+    - thelper
+    - unconvert
+    - usestdlibvars
+    - wrapcheck
+linter-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  gocognit:
+    # Minimal code complexity to report.
+    # Default: 30 (but we recommend 10-20)
+    min-complexity: 20
