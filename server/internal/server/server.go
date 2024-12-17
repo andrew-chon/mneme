@@ -3,26 +3,27 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
+
+	"github.com/andrew-chon/mneme/server/internal/logger"
 )
 
+type Config struct {
+	Port int
+}
 type Server struct {
-	port int
+	config Config
+	logger *logger.Logger
 }
 
-func NewServer() *http.Server {
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
-	if port == 0 {
-		port = 8080
-	}
+func NewServer(cfg Config, logger *logger.Logger) *http.Server {
 	NewServer := &Server{
-		port: port,
+		config: cfg,
+		logger: logger,
 	}
 
 	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", NewServer.port),
+		Addr:         fmt.Sprintf(":%d", cfg.Port),
 		Handler:      NewServer.RegisterRoutes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
@@ -30,8 +31,4 @@ func NewServer() *http.Server {
 	}
 
 	return server
-}
-
-func healthCheck(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintln(w, "status: available")
 }
