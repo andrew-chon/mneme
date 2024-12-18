@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/andrew-chon/mneme/server/internal/logger"
+	"github.com/andrew-chon/mneme/server/pkg/logger"
 )
 
 type Config struct {

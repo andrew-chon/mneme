@@ -1,3 +1,4 @@
+---
 linters:
   enable:
     - errcheck
@@ -14,7 +15,7 @@ linters:
     - exhaustive
     - forbidigo
     - gci
-    - gocheckcompilerdirectives 
+    - gocheckcompilerdirectives
     - gochecknoinits
     - gocognit # slow, potentially only enable in prod?
     - goconst
@@ -48,7 +49,6 @@ linters:
     - thelper
     - unconvert
     - usestdlibvars
-    - wrapcheck
 linter-settings:
   errcheck:
     check-type-assertions: true

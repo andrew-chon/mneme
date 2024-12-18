@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"github.com/andrew-chon/mneme/server/internal/health"
-	"github.com/andrew-chon/mneme/server/internal/logger"
+	"github.com/andrew-chon/mneme/server/pkg/logger"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
-type Handler struct {
+type handler struct {
 	health *health.Handler
 }
 
@@ -29,9 +29,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	return r
 }
 
-func getHandlers(logger *logger.Logger) Handler {
+func getHandlers(logger *logger.Logger) handler {
 	health := health.New(logger)
-	return Handler{
+
+	return handler{
 		health: &health,
 	}
 }

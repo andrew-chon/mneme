@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/andrew-chon/mneme/server/internal/env"
-	"github.com/andrew-chon/mneme/server/internal/logger"
 	"github.com/andrew-chon/mneme/server/internal/server"
+	"github.com/andrew-chon/mneme/server/pkg/logger"
 )
 
 func main() {
@@ -47,6 +47,7 @@ func run(ctx context.Context, logger *logger.Logger) error {
 	}
 	// Wait for the graceful shutdown to complete
 	logger.Info("Gracefully shutdown error", slog.Group("server", "addr", server.Addr))
+
 	return nil
 }
 
