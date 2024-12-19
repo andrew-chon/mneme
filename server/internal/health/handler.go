@@ -11,15 +11,13 @@ type Handler struct {
 	logger *logger.Logger
 }
 
-func New(logger *logger.Logger) Handler {
+func NewHandler(logger *logger.Logger) Handler {
 	return Handler{
 		logger: logger,
 	}
 }
 
 func (h *Handler) HealthHandler(w http.ResponseWriter, r *http.Request) {
-	h.logger.Info("healthHandler")
-
 	status := Status{
 		Status: "available",
 	}

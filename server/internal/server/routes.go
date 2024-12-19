@@ -30,7 +30,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 }
 
 func getHandlers(logger *logger.Logger) handler {
-	health := health.New(logger)
+	health := health.NewHandler(logger)
 
 	return handler{
 		health: &health,
