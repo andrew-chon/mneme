@@ -17,7 +17,7 @@ func TestHealthHandler(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(h.HealthHandler))
 	defer server.Close()
 
-	resp, err := http.Get(server.URL)
+	resp, err := http.Get(server.URL) //nolint:all
 	if err != nil {
 		t.Fatalf("error making request to server. Err: %v", err)
 	}

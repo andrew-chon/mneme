@@ -24,7 +24,12 @@ func NotFound(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 
 	err := Encode(w, int(http.StatusNotFound), response)
 	if err != nil {
-		logger.ErrorContext(r.Context(), "Error encoding response", "err", err, "requestMethod", r.Method, "requestUrl", r.URL.String)
+		logger.ErrorContext(
+			r.Context(), "Error encoding response",
+			"err", err,
+			"requestMethod", r.Method,
+			"requestUrl", r.URL.String,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
@@ -35,7 +40,12 @@ func InternalServerError(w http.ResponseWriter, r *http.Request, logger *logger.
 
 	err := Encode(w, int(http.StatusInternalServerError), response)
 	if err != nil {
-		logger.ErrorContext(r.Context(), "Error encoding response", "err", err, "requestMethod", r.Method, "requestUrl", r.URL.String)
+		logger.ErrorContext(
+			r.Context(), "Error encoding response",
+			"err", err,
+			"requestMethod", r.Method,
+			"requestUrl", r.URL.String,
+		)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
