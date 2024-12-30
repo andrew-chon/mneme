@@ -2,47 +2,56 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"errors"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"time"
 
+	"github.com/andrew-chon/mneme/server/internal/env"
 	"github.com/andrew-chon/mneme/server/internal/server"
+	"github.com/andrew-chon/mneme/server/pkg/logger"
 )
 
 func main() {
 	ctx := context.Background()
-	if err := run(ctx); err != nil {
-		fmt.Fprintf(os.Stderr, "%s/n", err)
+	logger := logger.New()
+	if err := run(ctx, logger); err != nil {
+		trace := string(debug.Stack())
+		logger.Error(err.Error(), "trace", trace)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context) error {
-	server := server.NewServer()
+func run(ctx context.Context, logger *logger.Logger) error {
+	var cfg server.Config
 
-	// Create a done channel to signal when the shutdown is complete
-	done := make(chan struct{}, 1)
+	cfg.Port = env.GetInt("PORT", 4444)
 
-	go gracefulShutdown(ctx, server, done)
+	server := server.NewServer(cfg, logger)
 
-	go func() {
-		log.Printf("listening on %s\n", server.Addr)
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			panic(fmt.Sprintf("Error listening and servering: %s", err))
-		}
-	}()
+	shutdownErrorChan := make(chan error)
+	go gracefulShutdown(ctx, server, shutdownErrorChan)
 
+	logger.Info("Starting server", slog.Group("server", "addr", server.Addr))
+	err := server.ListenAndServe()
+	if !errors.Is(err, http.ErrServerClosed) {
+		return err
+	}
+
+	err = <-shutdownErrorChan
+	if err != nil {
+		return err
+	}
 	// Wait for the graceful shutdown to complete
-	<-done
-	fmt.Fprint(os.Stderr, "\nGraceful shutdown complete\n")
+	logger.Info("Gracefully shutdown error", slog.Group("server", "addr", server.Addr))
 
 	return nil
 }
 
-func gracefulShutdown(ctx context.Context, server *http.Server, done chan<- struct{}) {
+func gracefulShutdown(ctx context.Context, server *http.Server, errChan chan<- error) {
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
@@ -51,9 +60,6 @@ func gracefulShutdown(ctx context.Context, server *http.Server, done chan<- stru
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	if err := server.Shutdown(shutdownCtx); err != nil {
-		fmt.Fprintf(os.Stderr, "error shutting down http server: %s\n", err)
-	}
 
-	done <- struct{}{}
+	errChan <- server.Shutdown(shutdownCtx)
 }

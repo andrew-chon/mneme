@@ -1,3 +1,4 @@
+---
 linters:
   enable:
     - errcheck
@@ -14,7 +15,7 @@ linters:
     - exhaustive
     - forbidigo
     - gci
-    - gocheckcompilerdirectives 
+    - gocheckcompilerdirectives
     - gochecknoinits
     - gocognit # slow, potentially only enable in prod?
     - goconst
@@ -48,8 +49,7 @@ linters:
     - thelper
     - unconvert
     - usestdlibvars
-    - wrapcheck
-linter-settings:
+linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
@@ -57,3 +57,5 @@ linter-settings:
     # Minimal code complexity to report.
     # Default: 30 (but we recommend 10-20)
     min-complexity: 20
+  lll:
+    line-length: 160

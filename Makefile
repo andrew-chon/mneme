@@ -1,4 +1,8 @@
-.PHONY: build run test clean watch lint
+.PHONY: build run test clean watch lint tidy
+
+help:
+	@echo 'Usage:'
+	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
 build:
 	@echo "Building..."
@@ -11,12 +15,19 @@ test:
 	@echo "Testing..."
 	@go test ./... -v
 
+test/race:
+	@echo "Testing..."
+	@go test ./... -v -race
+
+tidy:
+	go mod tidy -v
+	go fmt ./...
 
 clean:
 	@echo "Cleaning..."
 	@rm -f mneme
 
-lint: 
+lint:
 	@golangci-lint run
 
 watch:
