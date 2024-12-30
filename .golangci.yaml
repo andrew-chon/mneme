@@ -49,7 +49,7 @@ linters:
     - thelper
     - unconvert
     - usestdlibvars
-linter-settings:
+linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
@@ -57,3 +57,5 @@ linter-settings:
     # Minimal code complexity to report.
     # Default: 30 (but we recommend 10-20)
     min-complexity: 20
+  lll:
+    line-length: 160
