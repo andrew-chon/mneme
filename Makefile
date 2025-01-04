@@ -35,6 +35,11 @@ clean:
 lint:
 	@golangci-lint run
 
+docker-dev:
+	@echo "Starting dev server"
+	docker compose -f docker/docker-compose.dev.yaml up -d
+
+
 watch:
 	@if command -v air > /dev/null; then \
             air; \
