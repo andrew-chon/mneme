@@ -8,6 +8,11 @@ build:
 	@echo "Building..."
 	@go build -o mneme server/cmd/api/main.go
 
+build-prod:
+	@echo "Building for prod..."
+	@CGO_ENABLED=0 go build -o mneme -ldflags="-s -w" server/cmd/api/main.go
+
+
 run:
 	@go run server/cmd/api/main.go
 
