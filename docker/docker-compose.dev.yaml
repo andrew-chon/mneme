@@ -1,6 +1,6 @@
 ---
 services:
-  mneme-server:
+  server:
     container_name: mneme-server
     build:
       context: ..
@@ -8,18 +8,18 @@ services:
     ports:
       - 4444:4444
     environment:
-      - DATABASE_URL=postgres://postgres:password@mneme-postgres:5432/postgres
+      - DATABASE_URL=postgres://postgres:password@db:5432/postgres
     depends_on:
       - db
 
-  mneme-postgres:
+  db:
     image: postgres:17
     container_name: mneme-postgres
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: postgres
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     # volumes:
     #   - /var/lib/postgresql/data
