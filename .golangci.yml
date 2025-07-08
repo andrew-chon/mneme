@@ -1,0 +1,22 @@
+version: "2"
+linters:
+  default: all
+  disable:
+    - arangolint
+    - cyclop
+    - ginkgolinter
+    - promlinter
+    - protogetter
+    - spancheck
+    - testableexamples
+    - testifylint
+    - testpackage
+    - zerologlint
+    - wsl
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
