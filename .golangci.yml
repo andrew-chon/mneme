@@ -13,10 +13,10 @@ linters:
     - testpackage
     - zerologlint
     - wsl
+    - wsl5
 formatters:
   enable:
     - gci
     - gofmt
-    - gofumpt
     - goimports
     - golines

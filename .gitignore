@@ -31,5 +31,10 @@ go.work.sum
 # .idea/
 # .vscode/
 
+# Mac
+.DS_Store
+
+# Created files
 bin/
 tmp/
+
